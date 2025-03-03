@@ -1,4 +1,4 @@
-import gradio_app as gr
+import gradio as gr
 import subprocess
 import os
 
