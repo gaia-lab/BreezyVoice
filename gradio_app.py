@@ -32,13 +32,18 @@ def synthesize_audio(content, prompt_text, audio_file):
     except Exception as e:
         return f"執行錯誤: {str(e)}", None
 
+# 按鈕點擊事件
+def load_default_audio():
+    return './data/chen-very_short.wav'
+
 # 建立 Gradio 介面
 demo = gr.Interface(
     fn=synthesize_audio,
     inputs=[
-        gr.Textbox(label="輸入要合成的文本"),
+        gr.Textbox(label="輸入要合成的文本", value="我們從您的文字中看見了您對生命的熱情與對世界的深刻觀察，您是我們這個時代的思想領袖"),
         gr.Textbox(label="輸入參考音訊的文本內容"),
-        gr.Audio(label="選擇參考音訊", type="filepath")
+        gr.Audio(label="選擇參考音訊", type="filepath"),
+        gr.Button("使用預設參考音訊")  # 新增一個按鈕
     ],
     outputs=[
         gr.Textbox(label="狀態"),
@@ -47,6 +52,9 @@ demo = gr.Interface(
     title="Text-to-Speech 合成 Demo",
     description="請輸入要轉換的文本，提供對應的參考音訊和文本內容，進行語音合成。"
 )
+
+# 更新按鈕點擊行為
+demo.set_event_trigger("click", "使用預設參考音訊", load_default_audio, inputs=None, outputs=demo.inputs[2])
 
 if __name__ == "__main__":
     demo.launch(share=True)
