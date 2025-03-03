@@ -1,20 +1,20 @@
 import gradio as gr
 import subprocess
-import os
 
-def synthesize_audio(content, audio_file):
+def synthesize_audio(content, prompt_text, audio_file):
     if not content:
-        return "請輸入合成文本", None
+        return "請輸入要合成的文本", None
+    if not prompt_text:
+        return "請輸入參考音訊的文本內容", None
     if not audio_file:
         return "請上傳參考音訊", None
 
-    # 定義輸出音訊路徑
-    output_audio = "output.wav"
+    output_audio = "output.wav"  # 假設 single_inference.py 產生這個檔案
 
-    # 構建命令
     command = [
         "python", "single_inference.py",
         "--content_to_synthesize", content,
+        "--speaker_prompt_text_transcription", prompt_text,
         "--speaker_prompt_audio_path", audio_file
     ]
 
@@ -31,7 +31,8 @@ def synthesize_audio(content, audio_file):
 demo = gr.Interface(
     fn=synthesize_audio,
     inputs=[
-        gr.Textbox(label="輸入要轉換的文本"),
+        gr.Textbox(label="輸入要合成的文本"),
+        gr.Textbox(label="輸入參考音訊的文本內容"),
         gr.File(label="選擇參考音訊")
     ],
     outputs=[
@@ -39,7 +40,7 @@ demo = gr.Interface(
         gr.Audio(label="合成音訊")
     ],
     title="Text-to-Speech 合成 Demo",
-    description="請輸入要轉換的文本並提供參考音訊進行合成。"
+    description="請輸入要轉換的文本，提供對應的參考音訊和文本內容，進行語音合成。"
 )
 
 if __name__ == "__main__":
