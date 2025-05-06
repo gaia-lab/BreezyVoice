@@ -354,9 +354,14 @@ def parse_transcript(text, end):
     return parsed_output, start
 
 def single_inference(speaker_prompt_audio_path, content_to_synthesize, output_path, cosyvoice, bopomofo_converter, speaker_prompt_text_transcription=None):
+    print("Inferencing...")
     prompt_speech_16k = load_wav(speaker_prompt_audio_path, 16000)
     content_to_synthesize = content_to_synthesize
     output_path = output_path.strip()
+
+    # Check torch device
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print("Torch device:", device)
 
     if speaker_prompt_text_transcription:
         speaker_prompt_text_transcription = speaker_prompt_text_transcription
