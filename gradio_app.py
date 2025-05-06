@@ -2,6 +2,12 @@ import gradio as gr
 import subprocess
 import os
 from datetime import datetime
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=7860, help='指定啟動的 port')
+    return parser.parse_args()
 
 def synthesize_audio(content, prompt_text, audio_file, speed):
     if not content:
@@ -70,4 +76,5 @@ demo = gr.Interface(
 )
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    args = get_args()
+    demo.launch(share=True, server_port=args.port)
